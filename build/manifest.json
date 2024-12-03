@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "extension",
+  "name": "Bookmark++",
   "description": "Bookmark++ | Bookmark Utility",
-  "version": "0.0.1",
+  "version": "1.0.4",
   "permissions": [
     "tabs",
     "activeTab",
