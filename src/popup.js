@@ -656,15 +656,16 @@ if (bIsInitializing) {
                         //  despite the bookmark search working properly.
                         //  So for now we only log the error, otherwise
                         //  it will overwrite the valid LLM answer.
-                        /*
-                        // ERROR: Show the error in the LLM answer box.
-                        llmAnswerSelector.textContent =
-                        `${errPrefix}Failed to communicate with the service worker: ${chrome.runtime.lastError.message}`;
-                         */
+
+                        if (isEmptySafeString(llmAnswerSelector.textContent)) {
+                            // ERROR: Show the error in the LLM answer box.
+                            llmAnswerSelector.textContent =
+                                `${errPrefix}Failed to communicate with the service worker: ${chrome.runtime.lastError.message}`;
+                        } else {
+                            // Don't overwrite existing search results.
+                        }
 
                         console.warn(`${errPrefix}Failed to communicate with the service worker: ${chrome.runtime.lastError.message}`);
-
-                        hideSpinner();
                     } else {
                         // Check the response.
                         if (response === true) {
@@ -676,9 +677,12 @@ if (bIsInitializing) {
                             hideSpinner();
                         } else {
                             // Assume it is an error response.  Just show it.
-                            llmAnswerSelector.textContent = response;
+                            llmAnswerSelector.textContent =
+                                typeof response === 'object'
+                                    ? JSON.stringify(response)
+                                    : response;
 
-                            hideSpinner();
+                            // hideSpinner();
                         }
                     }
                 });
@@ -1655,10 +1659,14 @@ if (bIsInitializing) {
                     // -------------------- END  : EXISTING BOOKMARK CHECK ------------
 
                 } else if (message.type === 'bookmarkSearchResultsError') {
+                    // The background script is telling us that an error
+                    //  occurred during the bookmarks search.
+                    llmAnswerSelector.textContent = message.message;
+                } else if (message.type === 'emptyBookmarksCollection') {
                     // The background script is telling us that the bookmarks
                     //  collection is empty so a search operation is
                     //  pointless.
-                    llmAnswerSelector.textContent = message.message;
+                    llmAnswerSelector.textContent = `You do not have any bookmarks yet.  Please add some first.`;
                 } else if (message.type === 'bookmarkSearchResults') {
                     const errPrefix = `(message::bookmarkSearchResults) `;
 

@@ -541,13 +541,12 @@ export class BookmarksDbLiaison {
      *
      * @return {boolean}
      */
-    isEmptyBookmarksCollection() {
-        const methodName = 'BookmarksDbLiaison' + '::' + `isEmptyBookmarksCollection`;
+    async isEmptyBookmarksCollection_async() {
+        const methodName = 'BookmarksDbLiaison' + '::' + `isEmptyBookmarksCollection_async`;
         const errPrefix = '(' + methodName + ') ';
 
-        // If this object has not been initialized, throw an error.
-        if (!this.isCacheInitialized)
-            throw new Error(`${errPrefix} This object has not been initialized yet.`);
+        // We must wait for the cache to be initialized first.
+        await this._waitForBookmarksCacheOrDie(errPrefix);
 
         return this.cachedBookmarks.length < 1;
     }
@@ -633,6 +632,9 @@ export class BookmarksDbLiaison {
     async addBookmark_async(bookmarkRecordObj) {
         const methodName = 'BookmarksDbLiaison' + '::' + `addBookmark_async`;
         const errPrefix = '(' + methodName + ') ';
+
+        // We must wait for the cache to be initialized first.
+        await this._waitForBookmarksCacheOrDie(errPrefix);
 
         // If this object has not been initialized, throw an error.
         if (!this.isCacheInitialized)
@@ -798,6 +800,57 @@ export class BookmarksDbLiaison {
         return await this.indexedDbLiaison.isExistingObject_async(urlToSrcPage);
     }
 
+    // -------------------- BEGIN: WAIT FOR FUNCTIONS ------------
+
+    /**
+     * This function waits up to the given number of seconds
+     *  for the bookmarks cache to initialize.  If the wait
+     *  time expires, an error is thrown.
+     *
+     * @param {String} callerErrPrefix - The caller error
+     *  prefix
+     * @param {Number} maxSecondsToWait - The maximum number
+     *  of seconds to wait, before throwing an error.
+     * @return {Promise<void>}
+     *
+     * @private
+     */
+    async _waitForBookmarksCacheOrDie(callerErrPrefix, maxSecondsToWait=10) {
+        const methodName = 'BookmarksDbLiaison' + '::' + `_waitForBookmarksCacheOrDie`;
+        const errPrefix = '(' + methodName + ') ';
+
+        if (isEmptySafeString(callerErrPrefix))
+            throw new Error(`${errPrefix}The callerErrPrefix parameter is empty or invalid.`);
+
+        if (!Number.isSafeInteger(maxSecondsToWait) || maxSecondsToWait < 0)
+            throw new Error(`${errPrefix}The maxSecondsToWait parameter must be zero or a positive integer greater than 0.  Value given: ${maxSecondsToWait} `);
+
+        console.log(`${callerErrPrefix}Waiting for bookmarks cache to initialized.`)
+
+        const checkIntervalMs = 250; // Interval to wait between checks
+        const maxAttempts = (maxSecondsToWait * 1000) / checkIntervalMs; // Calculate max attempts
+
+        let attempts = 0;
+
+        while (!this.isCacheInitialized && attempts < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, checkIntervalMs)); // Sleep for 250 ms
+            attempts++;
+        }
+
+        if (!this.isCacheInitialized) {
+            throw new Error(`${callerErrPrefix}Cache initialization timed out after ${maxSecondsToWait} seconds.`);
+        }
+
+        const timeWaited =
+            (attempts * checkIntervalMs) / 1000;
+
+        console.log(`${callerErrPrefix}Time waited for bookmarks cache initialization: ${timeWaited} seconds.`);
+    }
+
+    // -------------------- END  : WAIT FOR FUNCTIONS ------------
+
+
+
     /**
      * Execute a semantic search against the bookmark records using the given
      *  array of embedding codes.
@@ -812,9 +865,10 @@ export class BookmarksDbLiaison {
      *  an error if a problem occurs.
      */
     async semanticSearchBookmarks_async(query, nBest=30) {
-        // If this object has not been initialized, throw an error.
-        if (!this.isCacheInitialized)
-            throw new Error(`This object has not been initialized yet.`);
+        const methodName = 'BookmarksDbLiaison' + '::' + `semanticSearchBookmarks_async`;
+        const errPrefix = '(' + methodName + ') ';
+        // We must wait for the cache to be initialized first.
+        await this._waitForBookmarksCacheOrDie(errPrefix);
 
         if (typeof query !== 'string' || query.length < 1)
             throw new Error(`The query parameter value is empty or invalid.`);

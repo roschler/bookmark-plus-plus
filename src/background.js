@@ -499,19 +499,41 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (!Number.isSafeInteger(requestObj.nBest) || requestObj.nBest < 1)
                     throw new Error(`The requestObj.nBest must be an integer greater than or equal to 1.  Value given: ${requestObj.nBest}`);
 
-                // If there are no bookmarks yet to search, send
-                //  the response of FALSE to let the popup script know that.
-                if (g_BookmarkDbLiaisonObj.isEmptyBookmarksCollection()) {
-                    sendResponse(false);
-                } else {
-                    bIsAsyncResponse = true; // Tell the caller we will send the response asynchronously.
+                bIsAsyncResponse = true; // Tell the caller we will send the response asynchronously.
 
-                    // Start the search, but push the execution context
-                    //  out of this message handler.
-                    setTimeout(async () => {
-                        try {
-                            let awaitErrMsg = '(none)';
-                            let bErrorOccurred = false;
+                // Start the search, but push the execution context
+                //  out of this message handler.
+                setTimeout(async () => {
+                    try {
+                        let awaitErrMsg = '(none)';
+                        let bErrorOccurred = false;
+
+                        // Check for an empty bookmarks collection.
+                        // If there are no bookmarks yet to search, send
+                        //  the response of FALSE to let the popup script know that.
+                        const bIsBookmarksCollectionEmpty =
+                            await g_BookmarkDbLiaisonObj.isEmptyBookmarksCollection_async();
+
+                        if (bIsBookmarksCollectionEmpty) {
+                            // -------------------- BEGIN: SEND EMPTY BOOKMARKS NOTIFICATION ------------
+
+                            console.info(CONSOLE_CATEGORY, `Semantic bookmark search request ignored because the bookmarks collection is empty.  Broadcasting notification to the popup script.`);
+
+                            // Send the results of the operation to the popup
+                            //  script, asynchronously over the "message" bridge.
+                            const messageObj =
+                                {
+                                    type: 'emptyBookmarksCollection',
+                                    message: `The bookmarks collection is empty so a search was not performed.`,
+                                    user_query: requestObj.query
+                                }
+
+                            chrome.runtime.sendMessage(messageObj);
+
+                            // -------------------- END  : SEND EMPTY BOOKMARKS NOTIFICATION ------------
+
+                        } else {
+                            // -------------------- BEGIN: EXECUTE BOOKMARKS SEARCH ------------
 
                             const result =
                                 await g_BookmarkDbLiaisonObj.semanticSearchBookmarks_async(
@@ -549,19 +571,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
                                 chrome.runtime.sendMessage(messageObj);
                             }
-                        } catch(err) {
-                            const errMsg = conformErrorObjectMsg(err);
-                            // Send the error to the popup script.
-                            const messageObj =
-                                {
-                                    type: 'bookmarkSearchResultsError',
-                                    message: `(setTimeout) Semantic bookmark search operation failed. Details:\n${errMsg}`
-                                }
 
-                            sendResponse(messageObj);
+                            // -------------------- END  : EXECUTE BOOKMARKS SEARCH ------------
                         }
-                    }, 100);
-                }
+                    } catch(err) {
+                        const errMsg = conformErrorObjectMsg(err);
+                        // Send the error to the popup script.
+                        const messageObj =
+                            {
+                                type: 'bookmarkSearchResultsError',
+                                message: `(setTimeout) Semantic bookmark search operation failed. Details:\n${errMsg}`
+                            }
+
+                        sendResponse(messageObj);
+                    }
+                }, 100);
             } catch (err) {
                 const errMsg = conformErrorObjectMsg(err);
 
