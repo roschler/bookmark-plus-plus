@@ -676,11 +676,15 @@ if (bIsInitializing) {
 
                             hideSpinner();
                         } else {
+                            /*
                             // Assume it is an error response.  Just show it.
                             llmAnswerSelector.textContent =
                                 typeof response === 'object'
                                     ? JSON.stringify(response)
                                     : response;
+                             */
+
+                            llmAnswerSelector.textContent = 'Finalizing...';
 
                             // hideSpinner();
                         }
