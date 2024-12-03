@@ -1,3 +1,6 @@
 # Running `npm run build` will build the project and output the files here.
 *
-!.gitignore
+# We WANT to include the contents of this directory so
+#  that people can load the unpacked extension using
+#  the contents of this directory.
+# !.gitignore
