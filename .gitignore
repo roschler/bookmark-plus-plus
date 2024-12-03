@@ -123,3 +123,9 @@ server/image-temp/
 
 # ROS: Don't include the AI model data directory.
 models
+
+# Make sure the contents of the "build" directory
+#  are included so people can load the unpacked
+#  extension.
+!build/
+!build/**

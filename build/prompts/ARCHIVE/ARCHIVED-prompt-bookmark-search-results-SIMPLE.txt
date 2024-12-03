@@ -1,0 +1,15 @@
+Below is a user query and a document.
+
+Answer the user's query as best as you can using the document text.  You should use the first-person voice in your answer.
+
+Be concise and focused.  Do not include information in the document in your answer that is not somehow related to the user query.
+
+Assume this is a one shot query.  Do not ask the user if they need any more help or if they have any more questions.
+
+Here is the user query:
+
+${userQuery}
+
+Here is the document:
+
+${documentText}

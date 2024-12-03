@@ -1,0 +1,486 @@
+/**
+ * Copyright 2024 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+:root {
+    font-family: "Roboto", sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+header, main, footer {
+    width: 100%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+body {
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+    min-height: 900px;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: darkgreen;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+textarea {
+    width: 100%;
+}
+
+textarea.short-textarea {
+    min-height: 5vh;
+}
+
+textarea.tall-textarea {
+    min-height: 30vh;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+legend {
+    color: darkgray;
+}
+
+dialog {
+    background-color: darkred;
+    border: 1px solid red;
+    border-radius: 4px;
+}
+
+pre {
+    text-wrap: auto;
+}
+
+.tokens-exceeded, #character-count-exceed {
+    color: red;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+    a:hover {
+        color: #747bff;
+    }
+
+    footer {
+        background-color: lightgreen;
+    }
+
+    dialog {
+        background-color: lightcoral;
+    }
+}
+
+/* -------------------- BEGIN: SUMMARY SETTINGS SECTION ------------ */
+
+.summary-settings-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensure responsiveness on smaller screens */
+    gap: 10px; /* Optional: Add spacing between child divs */
+    width: 100%; /* Ensure it uses the full width of the parent container */
+}
+
+.side-by-side {
+    display: flex;
+    flex-direction: column; /* Stack label and select vertically */
+    flex: 1; /* Ensure equal width for all child divs */
+    min-width: 150px; /* Set a minimum width for flexibility */
+    max-width: 33%; /* Optional: Limit each to approximately a third of the container */
+    box-sizing: border-box; /* Include padding and borders in width calculation */
+}
+
+.summary-settings-container > div {
+    text-align: left; /* Align content to the left */
+}
+
+/* -------------------- END: SUMMARY SETTINGS SECTION ------------ */
+
+/* -------------------- BEGIN: HEADER/BUTTON/SPINNER ------------ */
+
+/* Styling for header-div and header-format */
+#header-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 10px; */
+    /* border-bottom: 2px solid #ccc; */
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between elements */
+}
+
+#do-task-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#do-task-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Spinner container styling */
+.spinner-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px; /* Space between spinner and message */
+    visibility: hidden; /* Hide the container initially */
+}
+
+/* Spinner message styling */
+.spinner-message {
+    color: orange;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Spinner visibility management */
+#spinner:not(.hidden) ~ .spinner-container {
+    visibility: visible;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+/* Animation for spinner */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hidden class for spinner */
+.hidden {
+    display: none;
+}
+
+/* -------------------- END: HEADER/BUTTON/SPINNER ------------ */
+
+/* -------------------- BEGIN: TABBED POPUP ELEMENTS ------------ */
+
+/* Tab Headers Holder */
+#tab-headers-holder {
+    display: flex; /* Lay out child elements in a horizontal row */
+    justify-content: flex-start; /* Align tabs to the left */
+    align-items: center; /* Center tabs vertically */
+    background-color: #222; /* Background color for the tab bar */
+    padding: 5px;
+    border-bottom: 1px solid #444; /* Divider line under the tabs */
+    box-sizing: border-box; /* Include padding in width calculations */
+    width: 100%; /* Ensure it spans the full width */
+}
+
+/* Tab Header Divs */
+.tab-header-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 5px 10px; /* Reduced padding */
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px 5px 0 0; /* Rounded corners on top */
+    cursor: pointer;
+    margin-right: 5px; /* Spacing between tabs */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover Effect */
+.tab-header-div:hover {
+    background-color: #555;
+    color: #e0e0e0;
+}
+
+/* Selected Tab - Highlight Background */
+.tab-header-div[selected] {
+    background-color: #555; /* Slightly brighter background */
+    color: #fff;
+    border-bottom: none; /* Seamless transition into active content */
+}
+
+/* Tabbed Form Outer Div */
+#tabbed-form-outer-div {
+    margin-top: -1px; /* Align content with the active tab */
+    width: 100%; /* Ensure it spans the full width */
+    background-color: #2b2b2b;
+    /* border: 1px solid #444; */
+    /* border-radius: 0 0 5px 5px; /* Rounded corners on the bottom */
+    /* box-sizing: border-box; /* Include padding and border in width calculations */
+    /* padding: 15px; */
+}
+
+/* Tabbed Container Divs */
+.tabbed-container-div {
+    display: none; /* Hide all by default */
+    width: 100%; /* Ensure they span full width */
+    background-color: #2b2b2b;
+    color: #ddd;
+    padding: 15px;
+    /* box-sizing: border-box; /* Include padding and border in width calculations */
+    /* border: 1px solid #444;
+    /* border-radius: 0 0 5px 5px; /* Rounded corners on the bottom */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tabbed-container-div.active {
+    display: block; /* Show active content */
+}
+
+/* Animation for Tab Transition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -------------------- END: TABBED POPUP ELEMENTS ------------ */
+
+/* -------------------- BEGIN: SEARCH BOOKMARKS MINI-FORM ------------ */
+
+.child-div {
+    background-color:#070707;
+    width: 100%;
+    padding: 3px;
+}
+
+.user-input {
+    background-color:#070707;
+    width: 100%;
+    padding: 3px;
+    color: white;
+}
+
+.search-query {
+    width: 100%;
+    padding: 3px;
+    color: white;
+}
+
+/* -------------------- END  : SEARCH BOOKMARKS MINI-FORM ------------ */
+
+/* -------------------- BEGIN: AQA ANSWER PAGE ------------ */
+
+nav.aqa-nav {
+    background-color: #9E5EBF;
+}
+
+.aqa-nav-link {
+    color: blue;
+}
+
+.aqa-nav-links {
+    background: #9E5EBB;
+    color: black;
+    padding: 5px;
+}
+
+/* Submit the current query. */
+.my-submit-btn {
+    background-color: green;
+    color: white;
+}
+
+/* Create the embed video snippet */
+#build-video-embed-button {
+    background-color: darkblue;
+    color: white;
+}
+
+/* Grab the current content. */
+#build-content-button {
+    background-color: darkslategrey;
+    color: white;
+}
+
+.gradient-background {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5), rgba(0, 128, 0, 0.3));
+}
+
+.gradient-background-2 {
+    background: linear-gradient(to bottom, #191919, #003300);
+    /* Adjust the color values as needed */
+    width: 100%;
+    height: 200px; /* Adjust the height as needed */
+}
+
+.child-div {
+    background-color:#9E5EBB;
+    width: 100%;
+    padding: 3px;
+}
+
+.user-input {
+    background-color: palevioletred;
+}
+
+.my-answer-div {
+    /* background-color: orange; */
+    min-width: 400px;
+    min-height: 200px;
+    padding: 3px;
+    height: auto;
+}
+
+/* Answer text */
+
+li {
+    color: antiquewhite;
+}
+
+label {
+    color: aquamarine;
+}
+
+.formatted-answer {
+    color: antiquewhite;
+    margin-left: 20px; /* To keep the text inside the box. */
+}
+
+.formatted-answer ul {
+    color: green;
+}
+
+.formatted-answer b {
+    font-weight: bold;
+}
+
+.formatted-answer i {
+    font-style: italic;
+}
+
+/* Grounding attributions */
+.formatted-attributions {
+    color: purple;
+}
+
+.formatted-attributions ul {
+    color: green;
+}
+
+.formatted-attributions a {
+    color: lightblue;
+}
+
+.formatted-attributions a:hover {
+    color: green;
+}
+
+.llm-answer-unordered-list {
+    margin: 0px;
+    padding: 0px;
+}
+
+#llm-answer-div-text {
+}
+
+/* -------------------- END  : AQA ANSWER PAGE ------------ */
+
+/* -------------------- BEGIN: SCROLLABLE DIV ------------ */
+
+.scrollable-div {
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid #ccc; /* Optional for clarity */
+    padding: 10px; /* Optional for spacing */
+}
+
+/* Scrollbar Track */
+.scrollable-div::-webkit-scrollbar {
+    width: 10px; /* Width of the vertical scrollbar */
+    height: 10px; /* Height of the horizontal scrollbar */
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+    border-radius: 10px; /* Round corners for the track */
+}
+
+/* Scrollbar Thumb */
+.scrollable-div::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Round corners for the thumb */
+    border: 2px solid #f1f1f1; /* Adds padding and separates thumb */
+}
+
+.scrollable-div::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker color when hovered */
+}
+
+/* Firefox Scrollbar (Experimental) */
+.scrollable-div {
+    scrollbar-width: thin; /* Thin scrollbar */
+    scrollbar-color: #888 #f1f1f1; /* Thumb color, Track color */
+}
+
+/* -------------------- END  : SCROLLABLE DIV ------------ */
