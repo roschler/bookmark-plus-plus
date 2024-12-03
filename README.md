@@ -3,7 +3,7 @@ Open Source Repository for Bookmark++, a Bookmark Management Tool That Utilizes 
 
 ## Introduction
 
-Bookmark++ is a Chrome V3 extension that leverages Chrome local APIs and cutting-edge AI technologies to help you manage and search your bookmarks effectively. It uses the Summarization API to summarize the content of a web page before storing it in local storage, and the Prompt API to process bookmark searches. This ensures that Bookmark++ operates completely privately—your data never leaves your browser.
+Bookmark++ is a Chrome V3 extension that leverages Chrome local APIs and cutting-edge AI technologies to help you manage and search your bookmarks effectively. It uses the Summarization API to summarize the content of a web page before storing it in local storage, and the Prompt API to process bookmark searches.  Transformer.js is used with a local copy of the Jina embeddings model to create the embeddings needed for the natural language search features.  This ensures that Bookmark++ operates completely privately—your data never leaves your browser.  
 
 Bookmark++ transforms your bookmark collection into a searchable database, allowing you to find relevant web pages using natural language queries. Even better, it supports analytical queries, making your bookmarks an advanced knowledge base rather than just a static collection of web page references.
 

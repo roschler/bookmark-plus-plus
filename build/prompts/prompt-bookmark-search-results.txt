@@ -1,4 +1,4 @@
-Below is a list of web page that I have bookmarked related to:
+Below is a list of web pages that I have bookmarked related to:
 
 ${userQuery}
 
