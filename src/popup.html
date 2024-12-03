@@ -1,0 +1,148 @@
+<!doctype html>
+<!--
+  Original license:
+
+  Copyright 2024 Google LLC
+  SPDX-License-Identifier: Apache-2.0
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark++</title>
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="/font-awesome/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<div id="header-div" class="header-format">
+    <header>
+        <h2>Bookmark++ version 1.0</h2>
+        <button id="do-task-btn">ADD BOOKMARK</button>
+        <div id="spinner" class="spinner hidden"></div>
+        <div class="spinner-container">
+            <span id="spinner-message-span" class="spinner-message">Generating summary, please wait...</span>
+        </div>
+    </header>
+</div>
+
+<!-- Tab Headers -->
+<div id="tab-headers-holder">
+    <div class="tab-header-div" id="add-bookmark-tab-div" data-target="add-bookmark-container-div">
+
+    <i class="fas fa-bookmark"></i>
+        <span>Add Bookmark</span>
+    </div>
+    <div class="tab-header-div" id="search-bookmarks-tab-div" data-target="search-bookmarks-container-div" selected>
+        <i class="fas fa-search"></i>
+        <span>Search Bookmarks</span>
+    </div>
+    <div class="tab-header-div" id="bulk-import-tab-div" data-target="bulk-import-container-div">
+        <i class="fas fa-file-import"></i>
+        <span>Bulk Import</span>
+    </div>
+</div>
+
+<!-- Tabbed Form Outer Div -->
+<div id="tabbed-form-outer-div">
+    <!-- Add Bookmark Content -->
+    <div id="add-bookmark-container-div" class="tabbed-container-div" style="display: block;">
+        <main>
+            <fieldset>
+                <legend>Page Title</legend>
+                <textarea id="page_title" class="short-textarea"></textarea>
+            </fieldset>
+            <fieldset>
+                <legend>User Note</legend>
+                <textarea id="user_note" class="short-textarea"></textarea>
+            </fieldset>
+            <fieldset>
+                <legend>Settings</legend>
+                <div class="summary-settings-container">
+                    <div id="summary-type" class="side-by-side">
+                        <label for="type">Summary Type:</label>
+                        <select id="type">
+                            <option value="key-points" selected>Key Points</option>
+                            <option value="tl;dr">TL;DR</option>
+                            <option value="teaser">Teaser</option>
+                            <option value="headline">Headline</option>
+                        </select>
+                    </div>
+                    <div id="summary-length" class="side-by-side">
+                        <label for="length">Length:</label>
+                        <select id="length">
+                            <option value="short">Short</option>
+                            <option value="medium">Medium</option>
+                            <option value="long" selected>Long</option>
+                        </select>
+                    </div>
+                    <div id="summary-format" class="side-by-side">
+                        <label for="format">Format:</label>
+                        <select id="format">
+                            <option value="markdown">Markdown</option>
+                            <option value="plain-text" selected>Plain text</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Web Page Summary</legend>
+                <pre id="summary-text"></pre>
+            </fieldset>
+            <fieldset>
+                <legend>Web Page Text to Summarize</legend>
+                <textarea id="input" class="tall-textarea"></textarea>
+                <div>Character Count: <span id="character-count">0</span><span id="character-count-exceed" class="hidden"> (may exceed maximum token limit supported by the API.)</span></div>
+            </fieldset>
+        </main>
+    </div>
+
+    <!-- Search Bookmarks Content -->
+    <div id="search-bookmarks-container-div" class="tabbed-container-div" style="display: none;">
+        <!-- -------------------- BEGIN: SEARCH BOOKMARKS ------------ -->
+
+        <fieldset id="search-query-fieldset" class="">
+            <legend>Your Question:</legend>
+            <input id="search-query" class="direct-chat search-query" placeholder="Type your question here and then press the SEARCH button above or hit ENTER." value="What are cognition robots?">
+        </fieldset>
+
+        <fieldset id="llm-answer-fieldset" class="">
+            <legend>Answer:</legend>
+            <div id="llm-answer-div-text" class="my-answer-div gradient-background-2 scrollable-div">(Waiting for user input)</div>
+        </fieldset>
+
+        <fieldset id="wrap-answer-heat-bar-fieldset" class="">
+            <legend>Answer Heat Map:</legend>
+            <!-- Optionally include a label if necessary -->
+            <div id="answer-heat-bar"></div>
+        </fieldset>
+
+        <fieldset id="search-results-fieldset" class="">
+            <legend>Relevant Bookmarks:</legend>
+            <div id="search-results-div-text" class="my-answer-div gradient-background-2">(Waiting for user input)</div>
+        </fieldset>
+
+        <!-- -------------------- END  : SEARCH BOOKMARKS  ------------ -->
+    </div>
+
+    <!-- Bulk Import Content -->
+    <div id="bulk-import-container-div" class="tabbed-container-div" style="display: none;">
+        <p>Bulk Import content will go here.</p>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    Be the first to test new AI APIs. Your feedback is invaluable to our development process. Join our <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> today.
+</footer>
+
+<dialog id="summarization-unavailable">
+    <div>Your browser doesn't support the Summarization API. If you're on Chrome, join the <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> and enable it.</div>
+</dialog>
+<dialog id="summarization-unsupported">
+    <div>The Summarization API is available, but your device is unable to run it. Check device requirements in the <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> documentation.</div>
+</dialog>
+<script src="./popup.js"></script>
+</body>
+</html>

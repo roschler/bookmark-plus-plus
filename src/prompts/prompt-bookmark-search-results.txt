@@ -1,0 +1,9 @@
+Below is a list of web pages that I have bookmarked related to:
+
+${userQuery}
+
+Please tell me what my bookmarks say about this.
+
+Here are the bookmarks:
+
+${documentText}

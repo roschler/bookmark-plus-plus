@@ -1,0 +1,19 @@
+Below is a user query and a document.
+
+The document contains a list of grounding attributions that you should use to craft your answer.
+
+Each grounding attribution has an ID, which is preceded by the string "GROUNDING ATTRIBUTION ID:", followed by the grounding attribution text, which is preceded by the string "GROUNDING ATTRIBUTION TEXT:".
+
+Use the GROUNDING ATTRIBUTION ID and GROUNDING ATTRIBUTION TEXT to filter out grounding attributions that should not be included in your answer because they are completely unrelated to the user query.  For the grounding attributions that are related to the user query, use both the GROUNDING ATTRIBUTION ID and GROUNDING ATTRIBUTION TEXT content to form your answer.
+
+Answer the user's query as best as you can using the grounding attributions you select.  You should use the first-person voice in your answer.
+
+Assume this is a one shot query.  Do not ask the user if they need any more help or if they have any more questions.
+
+Here is the user query:
+
+${userQuery}
+
+Here is the document with the grounding attributions:
+
+${documentText}
