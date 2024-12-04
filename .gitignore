@@ -122,7 +122,9 @@ server/public/dev-assets/
 server/image-temp/
 
 # ROS: Don't include the AI model data directory.
-models
+# The Jina model is quantized now and fits within
+#  the GitHub file size limit.  Include it now.
+# models
 
 # Make sure the contents of the "build" directory
 #  are included so people can load the unpacked
